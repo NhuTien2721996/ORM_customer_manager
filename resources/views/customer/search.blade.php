@@ -1,13 +1,13 @@
 @extends('admin.home')
 
 @section('content')
-    <form method="post" action="{{route('customers.search')}}" enctype="multipart/form-data">
+    <form enctype="multipart/form-data" method="post">
         @csrf
         <table class="table table-striped">
             <thead>
             <h1 style="color: red ; text-align: center">Danh sách khách hàng</h1>
             <tr>
-               <input type="text" name="search" >
+                <input type="text" name="search" >
                 <button type="submit" class="btn btn-primary">Search</button>
             </tr>
             <tr>

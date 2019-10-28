@@ -21,4 +21,9 @@ Route::prefix('customers')->group(function () {
     Route::get('delete/{id}', 'CustomerController@delete')->name('customers.delete');
     Route::get('edit/{id}', 'CustomerController@edit')->name('customers.edit');
     Route::post('edit/{id}','CustomerController@update')->name('customers.update');
+    Route::get('search', 'CustomerController@search')->name('customers.search');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

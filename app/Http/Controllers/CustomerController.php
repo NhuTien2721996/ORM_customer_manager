@@ -14,6 +14,7 @@ class CustomerController extends Controller
     public function __construct(customer $customer)
     {
         $this->customer = $customer;
+        $this->middleware('auth');
     }
 
     public function index()
@@ -76,5 +77,12 @@ class CustomerController extends Controller
         $customer->address = $request->address;
         $customer->save();
         return redirect()->route('customers.index');
+    }
+
+    public function search(Request $request){
+        $search=$request->get('search');
+        $dataSearch=DB::table("customers")->where("name","like","%$search%");
+
+        return view('customer.search', compact('dataSearch'));
     }
 }
