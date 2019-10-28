@@ -3,6 +3,7 @@
 
     <form method="post" action="{{route('customers.update',$customer->id)}}" enctype="multipart/form-data">
         @csrf
+        <h1 style="text-align: center">Thay đổi thông tin khách hàng</h1>
         <div class="form-group">
             <label>Name</label>
             <input type="text" class="form-control" name="name" value="{{$customer->name}}">
@@ -16,16 +17,10 @@
             <input type="text" class="form-control" name="address" value="{{$customer->address}}">
         </div>
         <div class="form-group">
-            <label for="inputFileName">File Name</label>
-            <input type="text"
-                   class="form-control"
-                   id="inputFileName"
-                   name="inputFileName"
-                   value="{{$customer->image}}">
-            <input type="file"
-                   class="form-control-file"
-                   id="inputFile"
-                   name="inputFile">
+            <label>Image</label>
+            <img src="{{asset('storage/image/'.$customer->image)}}" width="50" height="40">
+            <label>Image NEW</label>
+            <input type="file" name="image">
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
 

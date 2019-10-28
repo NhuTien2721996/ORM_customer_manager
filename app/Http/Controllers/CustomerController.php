@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -28,33 +29,21 @@ class CustomerController extends Controller
 
     public function add(Request $request)
     {
+        $image = $request->image;
+        $path = 'public/image';
+        $fileName = time() . '.' . $image->getClientOriginalExtension();
+        $image->storeAs($path, $fileName);
         $customer = new customer();
         $customer->name = $request->name;
         $customer->email = $request->email;
         $customer->address = $request->address;
-
-        if (!$request->hasFile('inputFile')) {
-            $customer->image = $request->inputFile;
-        } else {
-            $file = $request->file('inputFile');
-
-            //Lấy ra định dạng và tên mới của file từ request
-            $fileExtension = $file->getClientOriginalExtension();
-            $fileName = $request->inputFileName;
-
-            // Gán tên mới cho file trước khi lưu lên server
-            $newFileName = "$fileName.$fileExtension";
-
-            //Lưu file vào thư mục storage/app/public/image với tên mới
-            $request->file('inputFile')->storeAs('public/image', $newFileName);
-
-            // Gán trường image của đối tượng task với tên mới
-            $customer->image = $newFileName;
-        }
+        $customer->image = $fileName;
         $customer->save();
         return redirect()->route('customers.index');
 
+
     }
+
 
     public function delete($id)
     {
@@ -73,9 +62,19 @@ class CustomerController extends Controller
 
     public function update(Request $request, $id)
     {
-      $customer=$this->customer->findOrFail($id);
-        File::delete(storage_path('app\public\image\\' . $customer->image));
-      $customer->update($request->all());
-      return redirect()->route('customers.index');
+        $customer = $this->customer->findOrFail($id);
+        if ($request->image) {
+            File::delete(storage_path('app\public\image\\' . $customer->image));
+            $image = $request->image;
+            $path = 'public/image';
+            $fileName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs($path, $fileName);
+            $customer->image = $fileName;
+        }
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        $customer->address = $request->address;
+        $customer->save();
+        return redirect()->route('customers.index');
     }
 }
